@@ -1,5 +1,7 @@
 import builder.HttpRequestBuilder;
+import builder.HttpResponseBuilder;
 import objects.HttpRequest;
+import objects.HttpResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class Main {
@@ -28,15 +31,21 @@ public class Main {
            System.out.println("accepted new connection");
 
            HttpRequest httpRequest = HttpRequestBuilder.parseFromInputStream(clientSocket.getInputStream());
+           /*       HttpRequest System Print        */
            System.out.println(httpRequest.toString());
 
+           String randomString = httpRequest.getPath().substring(httpRequest.getPath().lastIndexOf('/')+1);
+
            OutputStream os = clientSocket.getOutputStream();
+           HttpResponse response = new HttpResponseBuilder()
+                                                    .version("HTTP/1.1")
+                                                       .status("OK")
+                                                       .statusCode(200)
+                                                       .method("GET")
+                                                       .body(randomString)
+                                                        .build();
 
-           if(!Objects.equals(httpRequest.getPath(), "/")){
-               sendBadResponse(os);
-           }
-           else sendGoodResponse(os);
-
+           os.write(response.parseResponse().getBytes());
            os.close();
            clientSocket.close();
        }
@@ -44,14 +53,4 @@ public class Main {
        System.out.println("IOException: " + e.getMessage());
      }
   }
-
-    private static void sendGoodResponse(OutputStream os) throws IOException {
-        String content = "HTTP/1.1 200 OK\r\n\r\n";
-        os.write(content.getBytes());
-    }
-
-    private static void sendBadResponse(OutputStream os) throws IOException {
-        String content = "HTTP/1.1 404 NOT FOUND\r\n\r\n";
-        os.write(content.getBytes());
-    }
 }
