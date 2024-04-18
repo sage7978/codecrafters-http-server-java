@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Objects;
 
 public class Main {
   public static void main(String[] args) {
@@ -31,7 +32,7 @@ public class Main {
 
            OutputStream os = clientSocket.getOutputStream();
 
-           if(httpRequest.getPath().charAt(0) != '/'){
+           if(!Objects.equals(httpRequest.getPath(), "/")){
                sendBadResponse(os);
            }
            else sendGoodResponse(os);
