@@ -1,6 +1,7 @@
 package objects;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class HttpResponse {
     private String              method;
@@ -70,15 +71,19 @@ public class HttpResponse {
         sb.append(" ");
         sb.append(status);
         sb.append("\r\n");
-        for(Map.Entry<String, String> entry: headers.entrySet()){
-            sb.append(entry.getKey());
-            sb.append(":");
-            sb.append(entry.getValue());
+        if(Objects.nonNull(headers)){
+            for(Map.Entry<String, String> entry: headers.entrySet()){
+                sb.append(entry.getKey());
+                sb.append(":");
+                sb.append(entry.getValue());
+                sb.append("\r\n");
+            }
             sb.append("\r\n");
         }
-        sb.append("\r\n");
-        sb.append(body);
-        sb.append("\r\n");
+        if(Objects.nonNull(body)) {
+            sb.append(body);
+            sb.append("\r\n");
+        }
         return sb.toString();
     }
 }
