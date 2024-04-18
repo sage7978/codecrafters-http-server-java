@@ -1,4 +1,9 @@
+import builder.HttpRequestBuilder;
+import objects.HttpRequest;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,22 +21,36 @@ public class Main {
      try {
        serverSocket = new ServerSocket(4221);
        serverSocket.setReuseAddress(true);
-       clientSocket = serverSocket.accept(); // Wait for connection from client.
-       System.out.println("accepted new connection");
 
-       String content = "HTTP/1.1 200 OK\r\n\r\n";
-//         String response = "HTTP/1.1 200 OK\r\n";
-//         response += "Content-Type: text/plain\r\n";
-//         response += "\r\n";
-//         response += "Hello, this is a response from the server!";
-         // working for curl --http0.9 --output - http://127.0.0.1:4221
+       while(true) {
+           clientSocket = serverSocket.accept(); // Wait for connection from client.
+           System.out.println("accepted new connection");
 
-       OutputStream os = clientSocket.getOutputStream();
-       os.write(content.getBytes());
-       os.close();
-       clientSocket.close();
+           HttpRequest httpRequest = HttpRequestBuilder.parseFromInputStream(clientSocket.getInputStream());
+           System.out.println(httpRequest.toString());
+
+           OutputStream os = clientSocket.getOutputStream();
+
+           if(httpRequest.getPath().charAt(0) != '/'){
+               sendBadResponse(os);
+           }
+           else sendGoodResponse(os);
+
+           os.close();
+           clientSocket.close();
+       }
      } catch (IOException e) {
        System.out.println("IOException: " + e.getMessage());
      }
   }
+
+    private static void sendGoodResponse(OutputStream os) throws IOException {
+        String content = "HTTP/1.1 200 OK\r\n\r\n";
+        os.write(content.getBytes());
+    }
+
+    private static void sendBadResponse(OutputStream os) throws IOException {
+        String content = "HTTP/1.1 404 NOT FOUND\r\n\r\n";
+        os.write(content.getBytes());
+    }
 }
