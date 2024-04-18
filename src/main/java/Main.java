@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -17,6 +18,18 @@ public class Main {
        serverSocket.setReuseAddress(true);
        clientSocket = serverSocket.accept(); // Wait for connection from client.
        System.out.println("accepted new connection");
+
+       String content = "HTTP/1.1 200 OK\r\n\r\n";
+//         String response = "HTTP/1.1 200 OK\r\n";
+//         response += "Content-Type: text/plain\r\n";
+//         response += "\r\n";
+//         response += "Hello, this is a response from the server!";
+         // working for curl --http0.9 --output - http://127.0.0.1:4221
+
+       OutputStream os = clientSocket.getOutputStream();
+       os.write(content.getBytes());
+       os.close();
+       clientSocket.close();
      } catch (IOException e) {
        System.out.println("IOException: " + e.getMessage());
      }
