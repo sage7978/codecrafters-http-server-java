@@ -33,7 +33,7 @@ public class Main {
            HttpRequest httpRequest = HttpRequestBuilder.parseFromInputStream(clientSocket.getInputStream());
            /*       HttpRequest System Print        */
            System.out.println(httpRequest.toString());
-           httpRequest.setPath(httpRequest.getPath() + " ");
+//           httpRequest.setPath(httpRequest.getPath() + " ");
            String[] paths = httpRequest.getPath().split("/");
 //           System.out.println(Arrays.toString(paths));
            HttpResponse response = null;
