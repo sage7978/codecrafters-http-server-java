@@ -5,8 +5,12 @@ import builder.HttpResponseBuilder;
 import objects.HttpRequest;
 import objects.HttpResponse;
 
+import java.io.File;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 public class ClientHandler implements Runnable{
@@ -62,7 +66,10 @@ public class ClientHandler implements Runnable{
                         .body(body)
                         .build();
             } else if(isFileInDirectory(path)) {
-                body = arguments.get("directory");
+                String directoryPath = arguments.get("directory");
+                String fileName = path.substring("/files/".length()+1);
+                Path filePath = Paths.get(directoryPath, fileName).normalize();
+                body = new String(Files.readAllBytes(filePath));
                 response = new HttpResponseBuilder()
                         .version("HTTP/1.1")
                         .status("OK")
@@ -95,12 +102,15 @@ public class ClientHandler implements Runnable{
     }
 
     private boolean isFileInDirectory(String path) {
-        if(!path.startsWith("/files")){
+        if(!path.startsWith("/files/")){
             return false;
         }
         if(!arguments.containsKey("directory")){
             return false;
         }
-        return path.substring("/files".length() + 1).equals(arguments.get("directory"));
+        String directoryPath = arguments.get("directory");
+        String fileName = path.substring("/files/".length()+1);
+        Path filePath = Paths.get(directoryPath, fileName).normalize();
+        return Files.exists(filePath) && Files.isRegularFile(filePath);
     }
 }
