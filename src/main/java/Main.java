@@ -37,7 +37,29 @@ public class Main {
            String body = null;
            String path = httpRequest.getPath();
 
-           if(path.equals("/user-agent")){
+           if(path.equals("/")){
+               response = new HttpResponseBuilder()
+                       .version("HTTP/1.1")
+                       .status("OK")
+                       .statusCode(200)
+                       .method("GET")
+                       .addHeader("Content-Length", String.valueOf(0))
+                       .addHeader("Content-Type", "text/plain")
+                       .build();
+           }
+           else if(path.startsWith("/echo")){
+               body = httpRequest.getPath().substring(6);
+               response = new HttpResponseBuilder()
+                       .version("HTTP/1.1")
+                       .status("OK")
+                       .statusCode(200)
+                       .method("GET")
+                       .body(body)
+                       .addHeader("Content-Length", String.valueOf(body.length()))
+                       .addHeader("Content-Type", "text/plain")
+                       .build();
+           }
+           else if(path.equals("/user-agent")){
                body = httpRequest.getHeaders().getOrDefault("User-Agent", "");
                response = new HttpResponseBuilder()
                        .version("HTTP/1.1")
