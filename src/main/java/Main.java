@@ -37,16 +37,19 @@ public class Main {
            String[] paths = httpRequest.getPath().split("/");
 //           System.out.println(Arrays.toString(paths));
            HttpResponse response = null;
+           String body = null;
            if(paths.length == 0){
                response = new HttpResponseBuilder()
                        .version("HTTP/1.1")
                        .status("OK")
                        .statusCode(200)
                        .method("GET")
+                       .addHeader("Content-Length", String.valueOf(0))
+                       .addHeader("Content-Type", "text/plain")
                        .build();
            }
            else if("echo".equals(paths[1])){
-               String body = paths[paths.length-1].trim();
+               body = paths[paths.length-1].trim();
                response = new HttpResponseBuilder()
                        .version("HTTP/1.1")
                        .status("OK")
@@ -63,6 +66,8 @@ public class Main {
                        .status("NOT FOUND")
                        .statusCode(404)
                        .method("GET")
+                       .addHeader("Content-Length", String.valueOf(0))
+                       .addHeader("Content-Type", "text/plain")
                        .build();
            }
 

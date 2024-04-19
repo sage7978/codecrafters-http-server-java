@@ -74,7 +74,7 @@ public class HttpResponse {
         if(Objects.nonNull(headers)){
             for(Map.Entry<String, String> entry: headers.entrySet()){
                 sb.append(entry.getKey());
-                sb.append(":");
+                sb.append(": ");
                 sb.append(entry.getValue());
                 sb.append("\r\n");
             }
