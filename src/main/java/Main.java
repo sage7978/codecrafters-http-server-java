@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public class Main {
 
-    private static volatile boolean running = false;
+    private static volatile boolean running = true;
 
   public static void main(String[] args) {
     System.out.println("Logs from your program will appear here!");
