@@ -33,12 +33,11 @@ public class Main {
            HttpRequest httpRequest = HttpRequestBuilder.parseFromInputStream(clientSocket.getInputStream());
            /*       HttpRequest System Print        */
            System.out.println(httpRequest.toString());
-//           httpRequest.setPath(httpRequest.getPath() + " ");
-           String[] paths = httpRequest.getPath().split("/");
-//           System.out.println(Arrays.toString(paths));
+//           String[] paths = httpRequest.getPath().split("/");
            HttpResponse response = null;
            String body = null;
-           if(paths.length == 0){
+           String path = httpRequest.getPath();
+           if(path.equals("/")){
                response = new HttpResponseBuilder()
                        .version("HTTP/1.1")
                        .status("OK")
@@ -48,8 +47,8 @@ public class Main {
                        .addHeader("Content-Type", "text/plain")
                        .build();
            }
-           else if("echo".equals(paths[1])){
-               body = paths[paths.length-1].trim();
+           else if(path.startsWith("/echo")){
+               body = httpRequest.getPath().substring(6);
                response = new HttpResponseBuilder()
                        .version("HTTP/1.1")
                        .status("OK")
