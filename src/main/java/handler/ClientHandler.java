@@ -68,7 +68,7 @@ public class ClientHandler implements Runnable{
                         .build();
             } else if(isFileInDirectory(path)) {
                 String directoryPath = arguments.get("directory");
-                String fileName = path.substring("/files/".length()+1);
+                String fileName = path.substring("/files/".length());
                 Path filePath = Paths.get(directoryPath, fileName).normalize();
                 body = new String(Files.readAllBytes(filePath));
                 response = new HttpResponseBuilder()
@@ -110,9 +110,9 @@ public class ClientHandler implements Runnable{
             return false;
         }
         System.out.println("Directory: " + arguments.get("directory"));
-        System.out.println("File Name: " + path.substring("/files/".length()+1));
+        System.out.println("File Name: " + path.substring("/files/".length()));
         String directoryPath = arguments.get("directory");
-        String fileName = path.substring("/files/".length()+1);
+        String fileName = path.substring("/files/".length());
         Path filePath = Paths.get(directoryPath, fileName).normalize();
         return Files.exists(filePath) && Files.isRegularFile(filePath);
     }
