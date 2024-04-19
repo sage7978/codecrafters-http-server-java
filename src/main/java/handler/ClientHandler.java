@@ -28,6 +28,7 @@ public class ClientHandler implements Runnable{
             HttpRequest httpRequest = HttpRequestBuilder.parseFromInputStream(clientSocket.getInputStream());
             /*       HttpRequest System Print        */
             System.out.println(httpRequest.toString());
+            System.out.println("arguments: " + arguments);
 
             HttpResponse response = null;
             String body = null;
@@ -108,6 +109,8 @@ public class ClientHandler implements Runnable{
         if(!arguments.containsKey("directory")){
             return false;
         }
+        System.out.println("Directory: " + arguments.get("directory"));
+        System.out.println("File Name: " + path.substring("/files/".length()+1));
         String directoryPath = arguments.get("directory");
         String fileName = path.substring("/files/".length()+1);
         Path filePath = Paths.get(directoryPath, fileName).normalize();
