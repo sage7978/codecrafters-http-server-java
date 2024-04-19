@@ -23,7 +23,6 @@ public class Main {
     System.out.println("Logs from your program will appear here!");
 
      ServerSocket serverSocket = null;
-     System.out.println("Yoho, lets check the arguments, yoho: " + args[0]);
      Map<String, String> arguments = commandLineArguments(args);
      try {
        serverSocket = new ServerSocket(4221);
